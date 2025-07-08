@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Modern Portfolio</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+
+      body {
+        background: #f4f4f9;
+        color: #333;
+        line-height: 1.6;
+        overflow-x: hidden;
+        transition: background 0.3s, color 0.3s;
+      }
+
+      body.dark-theme {
+        background: #1e1e2f;
+        color: #ffffff;
+      }
+
+      /* Navbar */
+      nav {
+        background: #2c3e50;
+        color: #fff;
+        padding: 1rem 2rem;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      body.dark-theme nav {
+        background: #1a252f;
+      }
+
+      nav .logo {
+        font-size: 1.5rem;
+        font-weight: 600;
+      }
+
+      nav ul {
+        display: flex;
+        list-style: none;
+        align-items: center;
+      }
+
+      nav ul li {
+        margin-left: 2rem;
+      }
+
+      nav ul li a {
+        color: #fff;
+        text-decoration: none;
+        font-size: 1rem;
+        transition: color 0.3s;
+      }
+
+      nav ul li a:hover {
+        color: #1abc9c;
+      }
+
+      .theme-toggle {
+        background: none;
+        border: none;
+        color: #fff;
+        font-size: 1.2rem;
+        cursor: pointer;
+        padding: 0.5rem;
+        transition: color 0.3s;
+      }
+
+      .theme-toggle:hover {
+        color: #1abc9c;
+      }
+
+      /* Hero Section */
+      .hero {
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        background: linear-gradient(135deg, #1abc9c, #3498db);
+        color: #fff;
+        padding: 2rem;
+      }
+
+      body.dark-theme .hero {
+        background: linear-gradient(135deg, #16a085, #2980b9);
+      }
+
+      .hero .profile-pic {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin: 0 auto 1rem;
+        border: 3px solid #fff;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      body.dark-theme .hero .profile-pic {
+        border-color: #e0e0e0;
+      }
+
+      .hero h1 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+      }
+
+      .hero p {
+        font-size: 1.2rem;
+        max-width: 600px;
+      }
+
+      /* About Section */
+      .about {
+        padding: 5rem 2rem;
+        text-align: center;
+        background: #fff;
+      }
+
+      body.dark-theme .about {
+        background: #2c2c44;
+      }
+
+      .about h2 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .about p {
+        max-width: 800px;
+        margin: 0 auto;
+        font-size: 1.1rem;
+        color: #666;
+      }
+
+      body.dark-theme .about p {
+        color: #e0e0e0;
+      }
+
+      /* Projects Section */
+      .projects {
+        padding: 5rem 2rem;
+        background: #f4f4f9;
+      }
+
+      body.dark-theme .projects {
+        background: #1e1e2f;
+      }
+
+      .projects h2 {
+        text-align: center;
+        font-size: 2.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .project-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .project-card {
+        background: #fff;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        position: relative;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      body.dark-theme .project-card {
+        background: #2c2c44;
+      }
+
+      .project-card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+      }
+
+      .project-card .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(26, 188, 156, 0.7);
+        opacity: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: opacity 0.3s ease;
+      }
+
+      .project-card:hover .overlay {
+        opacity: 1;
+      }
+
+      .project-card .overlay span {
+        color: #fff;
+        font-size: 1.2rem;
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+
+      .project-card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+      }
+
+      .project-card h3 {
+        padding: 1rem;
+        font-size: 1.5rem;
+      }
+
+      .project-card p {
+        padding: 0 1rem 1rem;
+        color: #666;
+      }
+
+      body.dark-theme .project-card p {
+        color: #e0e0e0;
+      }
+
+      /* Contact Section */
+      .contact {
+        padding: 5rem 2rem;
+        text-align: center;
+        background: #2c3e50;
+        color: #fff;
+      }
+
+      body.dark-theme .contact {
+        background: #1a252f;
+      }
+
+      .contact h2 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .contact p {
+        max-width: 600px;
+        margin: 0 auto 2rem;
+      }
+
+      .contact a {
+        color: #1abc9c;
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      body.dark-theme .contact a {
+        color: #16a085;
+      }
+
+      /* Chat Bubble */
+      .chat-bubble {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: #1abc9c;
+        color: #fff;
+        padding: 1rem 1.5rem;
+        border-radius: 50px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        font-size: 1rem;
+        z-index: 1000;
+        transition: background 0.3s;
+      }
+
+      body.dark-theme .chat-bubble {
+        background: #16a085;
+      }
+
+      .chat-bubble:hover {
+        background: #16a085;
+      }
+
+      body.dark-theme .chat-bubble:hover {
+        background: #1abc9c;
+      }
+
+      /* Chatbot Overlay */
+      .chat-overlay {
+        display: none;
+        position: fixed;
+        bottom: 80px;
+        right: 20px;
+        width: 350px;
+        max-height: 500px;
+        background: #fff;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+        flex-direction: column;
+      }
+
+      body.dark-theme .chat-overlay {
+        background: #2c2c44;
+      }
+
+      .chat-overlay.active {
+        display: flex;
+      }
+
+      .chat-header {
+        background: #1abc9c;
+        color: #fff;
+        padding: 1rem;
+        border-radius: 15px 15px 0 0;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      body.dark-theme .chat-header {
+        background: #16a085;
+      }
+
+      .chat-header .profile-pic {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid #fff;
+      }
+
+      body.dark-theme .chat-header .profile-pic {
+        border-color: #e0e0e0;
+      }
+
+      .chat-header h3 {
+        font-size: 1.2rem;
+        flex: 1;
+      }
+
+      .chat-header .close-btn {
+        background: none;
+        border: none;
+        color: #fff;
+        font-size: 1.2rem;
+        cursor: pointer;
+      }
+
+      .chat-body {
+        flex: 1;
+        padding: 1rem;
+        overflow-y: auto;
+        background: #f9f9f9;
+      }
+
+      body.dark-theme .chat-body {
+        background: #33334d;
+      }
+
+      .chat-message {
+        margin-bottom: 1rem;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .chat-message.user {
+        align-items: flex-end;
+      }
+
+      .chat-message.ai {
+        align-items: flex-start;
+      }
+
+      .chat-message .message {
+        max-width: 70%;
+        padding: 0.8rem;
+        border-radius: 10px;
+        font-size: 0.9rem;
+      }
+
+      .chat-message.user .message {
+        background: #1abc9c;
+        color: #fff;
+      }
+
+      body.dark-theme .chat-message.user .message {
+        background: #16a085;
+      }
+
+      .chat-message.ai .message {
+        background: #e0e0e0;
+        color: #333;
+      }
+
+      body.dark-theme .chat-message.ai .message {
+        background: #4a4a6b;
+        color: #e0e0e0;
+      }
+
+      .chat-message.typing .message {
+        background: #e0e0e0;
+        color: #333;
+        display: flex;
+        align-items: center;
+      }
+
+      body.dark-theme .chat-message.typing .message {
+        background: #4a4a6b;
+        color: #e0e0e0;
+      }
+
+      .typing-animation::after {
+        content: ".";
+        animation: dots 1.5s steps(5, end) infinite;
+      }
+
+      @keyframes dots {
+        0%,
+        20% {
+          content: ".";
+        }
+        40% {
+          content: "..";
+        }
+        60% {
+          content: "...";
+        }
+        80%,
+        100% {
+          content: "";
+        }
+      }
+
+      .chat-input {
+        display: flex;
+        padding: 1rem;
+        border-top: 1px solid #ddd;
+      }
+
+      body.dark-theme .chat-input {
+        border-top: 1px solid #4a4a6b;
+      }
+
+      .chat-input input {
+        flex: 1;
+        padding: 0.8rem;
+        border: 1px solid #ddd;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        outline: none;
+      }
+
+      body.dark-theme .chat-input input {
+        border: 1px solid #4a4a6b;
+        background: #33334d;
+        color: #e0e0e0;
+      }
+
+      .chat-input button {
+        background: #1abc9c;
+        color: #fff;
+        border: none;
+        padding: 0.8rem 1.2rem;
+        border-radius: 20px;
+        margin-left: 0.5rem;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+
+      body.dark-theme .chat-input button {
+        background: #16a085;
+      }
+
+      .chat-input button:hover {
+        background: #16a085;
+      }
+
+      body.dark-theme .chat-input button:hover {
+        background: #1abc9c;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        nav {
+          flex-direction: column;
+          padding: 1rem;
+        }
+
+        nav ul {
+          margin-top: 1rem;
+        }
+
+        nav ul li {
+          margin: 0 1rem;
+        }
+
+        .hero h1 {
+          font-size: 2rem;
+        }
+
+        .hero p {
+          font-size: 1rem;
+        }
+
+        .hero .profile-pic {
+          width: 120px;
+          height: 120px;
+        }
+
+        .about h2,
+        .projects h2,
+        .contact h2 {
+          font-size: 2rem;
+        }
+
+        .project-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .chat-overlay {
+          width: 90%;
+          max-height: 400px;
+          bottom: 70px;
+          right: 5%;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .hero h1 {
+          font-size: 1.5rem;
+        }
+
+        .hero .profile-pic {
+          width: 100px;
+          height: 100px;
+        }
+
+        .chat-bubble {
+          font-size: 0.9rem;
+          padding: 0.8rem 1.2rem;
+        }
+
+        .chat-overlay {
+          width: 95%;
+          bottom: 60px;
+        }
+
+        .chat-header h3 {
+          font-size: 1rem;
+        }
+
+        .chat-header .profile-pic {
+          width: 30px;
+          height: 30px;
+        }
+
+        .chat-input input {
+          font-size: 0.8rem;
+        }
+
+        .chat-input button {
+          padding: 0.6rem 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav>
+      <div class="logo">My Portfolio</div>
+      <ul>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li>
+          <button class="theme-toggle" onclick="toggleTheme()">
+            <span id="themeIcon">🌙</span>
+          </button>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+      <div>
+        <img
+          id="profilePic"
+          src="https://i.ibb.co/ynZGSnf5/Whats-App-Image-2025-07-07-at-21-38-10-cc325b4b.jpg"
+          alt="Profile Picture"
+          class="profile-pic"
+        />
+        <h1>Akanksha raj</h1>
+        <p>
+          Aspiring Full-Stack Developer | MERN Stack Enthusiast. Explore my work
+          and let's connect!
+        </p>
+      </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+      <h2>About Me</h2>
+
+      <p>
+        Hi! I’m a 2nd-year B.Tech student in Information Technology with 7.9
+        cgpa, passionate about building full-stack web applications and solving
+        real-world problems through code. I specialize in the MERN stack
+        (MongoDB, Express.js, React, Node.js) and enjoy working on both frontend
+        and backend development. So far, I’ve developed several hands-on
+        projects, including: Wanderlust – a full-stack travel app inspired by
+        Airbnb, featuring authentication, image uploads, database integration,
+        and more. Zerodha Clone – a full-stack replica of the popular trading
+        platform, focusing on UI/UX and backend logic. Weather App – built using
+        React and API integration to show real-time weather data. Spotify Clone
+        – replicating the Spotify interface using modern frontend tools. Simon
+        Says Game – a classic memory game built with HTML, CSS, and JavaScript.
+        I love turning ideas into working applications and continuously strive
+        to improve my skills. I'm open to learning, collaborating on projects,
+        and gaining practical experience through internships or freelance
+        opportunities.
+      </p>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="projects">
+      <h2>My Projects</h2>
+      <div class="project-grid">
+        <div class="project-card">
+          <img
+            src="https://i.ibb.co/DPhFqW6b/Whats-App-Image-2025-07-08-at-20-08-37-ceef933d.jpg"
+            alt="E-Commerce Platform"
+          />
+          <div class="overlay"><span>View Project</span></div>
+          <h3>Wanderlust</h3>
+          <p>
+            A full-stack travel application inspired by Airbnb. Built using the
+            MERN stack, it features user authentication, image upload
+            (Cloudinary), secure backend routing, and dynamic listings with
+            reviews. Users can search, book, and list stays with a modern,
+            responsive UI.
+          </p>
+        </div>
+        <div class="project-card">
+          <img
+            src="https://i.ibb.co/M5h37RXC/zerodha-image.jpg"
+            alt="Task Manager App"
+          />
+          <div class="overlay"><span>View Project</span></div>
+          <h3>Zerodha-Clone</h3>
+          <p>
+            A full-stack clone of the Zerodha trading platform. It replicates
+            the core UI and structure of Zerodha’s dashboard, with a focus on
+            component-based architecture, data visualization (charts/tables),
+            and a clean user experience using React and backend APIs.
+          </p>
+        </div>
+        <div class="project-card">
+          <img
+            src="https://i.ibb.co/vxH9sxwT/Whats-App-Image-2025-07-08-at-20-23-50-c0f478ca.jpg"
+            alt="Portfolio Builder"
+          />
+          <div class="overlay"><span>View Project</span></div>
+          <h3>Weather-App</h3>
+          <p>
+            A lightweight React application that fetches real-time weather data
+            using a weather API. Users can search for any city and get live
+            temperature, humidity, and weather conditions with a clean,
+            responsive design.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+      <h2>Get in Touch</h2>
+      <p>Interested in collaborating or have a question? Reach out to me!</p>
+      <p><a href="mailto:example@email.com">akankshabkp2000@gmail.com</a></p>
+      <p><a href="https://github.com/Akanksharaj409">GitHub</a></p>
+      <p>
+        <a href="https://www.linkedin.com/in/akanksha-raj-a3683b316/"
+          >LinkedIn</a
+        >
+      </p>
+    </section>
+
+    <!-- Chat Bubble -->
+    <div class="chat-bubble" onclick="toggleChat()">Ask anything about me</div>
+
+    <!-- Chatbot Overlay -->
+    <div class="chat-overlay" id="chatOverlay">
+      <div class="chat-header">
+        <img
+          id="chatProfilePic"
+          src="https://i.ibb.co/ynZGSnf5/Whats-App-Image-2025-07-07-at-21-38-10-cc325b4b.jpg"
+          alt="Profile Picture"
+          class="profile-pic"
+        />
+        <h3>Chat with Me</h3>
+        <button class="close-btn" onclick="toggleChat()">×</button>
+      </div>
+      <div class="chat-body" id="chatBody">
+        <div class="chat-message ai">
+          <div class="message">
+            Hi, I am Akanksha Raj, what do you want to know about me?
+          </div>
+        </div>
+      </div>
+      <div class="chat-input">
+        <input
+          type="text"
+          id="chatInput"
+          placeholder="Type your message..."
+          onkeypress="if(event.key === 'Enter') sendMessage()"
+        />
+        <button onclick="sendMessage()">Send</button>
+      </div>
+    </div>
+
+    <script>
+      // Random description generator
+      const descriptions = [
+        "I'm a passionate coder who loves crafting user-friendly apps. My focus is on web development and modern JavaScript frameworks. Always up for a tech challenge!",
+        "I'm a software developer with a knack for UI/UX design. I enjoy building efficient applications and turning creative ideas into reality.",
+        "I'm a tech enthusiast skilled in web development and JavaScript. I thrive on creating seamless user experiences and innovative solutions.",
+      ];
+      const myDescription =
+        descriptions[Math.floor(Math.random() * descriptions.length)];
+      const myFullname = "Akanksha Raj";
+      const GEMINI_API_KEY = "AIzaSyBl4CofMdL8idFiaYvAEgAFC9xLspfZrbI"; // Replace with your actual Gemini API key
+      const profilePicSrc =
+        "https://i.ibb.co/ynZGSnf5/Whats-App-Image-2025-07-07-at-21-38-10-cc325b4b.jpg"; // Your provided image URL
+      const fallbackPicSrc = "https://via.placeholder.com/150"; // Fallback image
+
+      // Set profile picture sources and handle errors
+      window.onload = () => {
+        const savedTheme = localStorage.getItem("theme");
+        const themeIcon = document.getElementById("themeIcon");
+        const profilePic = document.getElementById("profilePic");
+        const chatProfilePic = document.getElementById("chatProfilePic");
+
+        if (savedTheme === "dark") {
+          document.body.classList.add("dark-theme");
+          themeIcon.textContent = "☀️";
+        } else {
+          themeIcon.textContent = "🌙";
+        }
+
+        // Set hero section profile picture
+        profilePic.src = profilePicSrc;
+        profilePic.onerror = () => {
+          profilePic.src = fallbackPicSrc; // Fallback if image fails to load
+        };
+
+        // Set chatbox profile picture
+        chatProfilePic.src = profilePicSrc;
+        chatProfilePic.onerror = () => {
+          chatProfilePic.src = fallbackPicSrc; // Fallback if image fails to load
+        };
+      };
+
+      // Smooth scrolling for navigation links
+      document.querySelectorAll("nav ul li a").forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          const targetId = this.getAttribute("href").substring(1);
+          const targetElement = document.getElementById(targetId);
+          window.scrollTo({
+            top: targetElement.offsetTop - 70,
+            behavior: "smooth",
+          });
+        });
+      });
+
+      // Theme toggle functionality
+      function toggleTheme() {
+        const body = document.body;
+        const themeIcon = document.getElementById("themeIcon");
+        body.classList.toggle("dark-theme");
+        if (body.classList.contains("dark-theme")) {
+          themeIcon.textContent = "☀️";
+          localStorage.setItem("theme", "dark");
+        } else {
+          themeIcon.textContent = "🌙";
+          localStorage.setItem("theme", "light");
+        }
+      }
+
+      // Chatbot functionality
+      function toggleChat() {
+        const chatOverlay = document.getElementById("chatOverlay");
+        const chatBody = document.getElementById("chatBody");
+        if (!chatOverlay.classList.contains("active")) {
+          // Clear previous messages and show initial message when opening
+          chatBody.innerHTML = `
+                    <div class="chat-message ai">
+                        <div class="message">Hi, I am ${myFullname}, what do you want to know about me?</div>
+                    </div>
+                `;
+        }
+        chatOverlay.classList.toggle("active");
+      }
+
+      async function sendMessage() {
+        const input = document.getElementById("chatInput");
+        const chatBody = document.getElementById("chatBody");
+        const messageText = input.value.trim();
+
+        if (messageText) {
+          // Add user message
+          const userMessage = document.createElement("div");
+          userMessage.className = "chat-message user";
+          userMessage.innerHTML = `<div class="message">${messageText}</div>`;
+          chatBody.appendChild(userMessage);
+
+          // Add typing animation
+          const typingMessage = document.createElement("div");
+          typingMessage.className = "chat-message ai typing";
+          typingMessage.innerHTML = `<div class="message">Typing<span class="typing-animation"></span></div>`;
+          chatBody.appendChild(typingMessage);
+          chatBody.scrollTop = chatBody.scrollHeight;
+
+          try {
+            // Make API call to Gemini
+            const response = await fetch(
+              `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  contents: [
+                    {
+                      parts: [
+                        {
+                          text: `User_message: ${messageText}. Reply naturally to the user message and if required then answer based on: ${myDescription} or just simply give a friendly reply. Reply in a way that John Doe is himself talking. Reply in short sentences.`,
+                        },
+                      ],
+                    },
+                  ],
+                }),
+              }
+            );
+
+            // Remove typing animation
+            typingMessage.remove();
+
+            if (!response.ok) {
+              throw new Error("API request failed");
+            }
+
+            const data = await response.json();
+            let aiResponse =
+              data.candidates[0].content.parts[0].text ||
+              `Hey, something went wrong with my response. Try again?`;
+
+            // Add AI response
+            const aiMessage = document.createElement("div");
+            aiMessage.className = "chat-message ai";
+            aiMessage.innerHTML = `<div class="message">${aiResponse}</div>`;
+            chatBody.appendChild(aiMessage);
+            chatBody.scrollTop = chatBody.scrollHeight;
+          } catch (error) {
+            // Remove typing animation
+            typingMessage.remove();
+
+            // Fallback response on error
+            const aiMessage = document.createElement("div");
+            aiMessage.className = "chat-message ai";
+            aiMessage.innerHTML = `<div class="message">Hey, I'm having trouble connecting right now. Ask me again? ${myDescription}</div>`;
+            chatBody.appendChild(aiMessage);
+            chatBody.scrollTop = chatBody.scrollHeight;
+          }
+
+          input.value = ""; // Clear input
+          chatBody.scrollTop = chatBody.scrollHeight;
+        }
+      }
+    </script>
+  </body>
+</html>
